@@ -1,5 +1,5 @@
 # my_dogs.py
-import dog
+from Dog import Dog
 
 my_dog = dog.Dog('Rex','Kryptonian')
 my_other_dog = dog.Dog('Annie','Labrador')
