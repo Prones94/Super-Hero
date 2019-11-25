@@ -1,5 +1,5 @@
 # superheroes.py
-import random
+from random import randint, choice
 
 # Ability Class
 
@@ -10,7 +10,7 @@ class Ability:
     
     def attack(self):
         '''Returns a value between 0 and value set by self.max_damage'''
-        attack_power = random.randint(0,self.damage)
+        attack_power = randint(0,self.damage)
         return attack_power
 
 # Armor Class
@@ -21,15 +21,14 @@ class Armor:
 
     def block(self):
         '''Returns random value between 0 and value set by self.defense'''
-        armour = random.randint(0,self.defense)
-        return armour
+        return randint(0,self.defense)
 
 # Hero Class
 class Hero:
     def __init__(self,name,starting_health=100):
         self.name = name
         self.health = starting_health
-        self.current_health = starting_health
+        self.current_health = self.health
         self.abilities = list()
         self.armors = list()
 
@@ -40,7 +39,7 @@ class Hero:
         total_atk = 0
         for ability in self.abilities:
             total_atk += ability.attack()
-            return total_atk
+        return total_atk
 
     def add_armor(self,armor):
         self.armors.append(armor)
@@ -49,24 +48,44 @@ class Hero:
         damage_amt = 0
         for armor in self.armors:
             damage_amt += armor.block()
-            return damage_amt
+        return damage_amt
 
     def take_damage(self,damage):
-        defense = self.defend()
-        self.current_health = damage - defense
+        self.current_health -= damage - self.defend() 
 
     def is_alive(self):
-        pass
+        return self.current_health > 0
 
-    def fight(self,Hero):
-        pass
+    def fight(self,opponent):
+        if not self.abilities:
+            return 'Draw'
+        while True:
+            if self.is_alive():
+                hero_attack = self.attack()
+                opponent.take_damage(hero_attack)
+            else:
+                print(f'{opponent.name} won!')
+                break
+            if opponent.is_alive():
+                hero_attack = opponent.attack()
+                self.take_damage(hero_attack)
+            else:
+                print(f'{self.name} won!')
+                break
+
+        
+
 
 if __name__ == "__main__":
-    # ability1 = Ability('Debugging Ability',900)
-    # ability2 = Ability('Hacking Ability',900)
-    armor1 = Armor('Shield',100)
-    hero = Hero("Ash Ketchum", 500)
-    hero.add_armor(armor1)
-    print(hero.current_health)
-    hero.take_damage(50)
-    print(hero.current_health)
+    hero1 = Hero("Wonder Woman")
+    hero2 = Hero("Dumbledore")
+    ability1 = Ability("Super Speed", 20)
+    ability2 = Ability("Super Eyes", 10)
+    ability3 = Ability("Wizard Wand", 800)
+    ability4 = Ability("Wizard Beard", 2000)
+    hero1.add_ability(ability1)
+    hero1.add_ability(ability2)
+    hero2.add_ability(ability3)
+    hero2.add_ability(ability4)
+    hero1.fight(hero2)
+    hero2.fight(hero1)
