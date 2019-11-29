@@ -103,8 +103,6 @@ class Hero:
                 break
 
 # class of Team
-
-
 class Team:
     def __init__(self, name):
         self.name = name
@@ -159,6 +157,42 @@ class Team:
             else:
                 alive_hero.append(hero)
         return dead_hero, alive_hero
+
+class Arena:
+    def __init__(self):
+        self.team_one = Team('My Team')
+        self.team_two = Team('Other Team')
+
+    def create_ability(self):
+        name = input('What is the ability name?')
+        max_damage = int(input('What\'s the max damage of this ability?'))
+        return Ability(name, max_damage)
+
+    def create_weapon(self):
+        name = input('Choose a weapon: start with naming it: ')
+        weapon_damage = int(input("How strong will this weapon be?"))
+        return Weapon(name, weapon_damage)
+
+    def create_armor(self):
+        name = input("now choose your legendary armor. What will this be named?")
+        max_block = int(input("how strong will this armor be?"))
+        return Armor(name, max_block)
+
+    def create_hero(self):
+        name = input("What will your hero be named: ")
+        hero = Hero(name)
+        add_item = None
+        while add_item != 4:
+            add_item = int(input("Press [1] to add ability\nPress [2] to add armor\nPress [3] to add weapon\nPress [4] when finished\n\nYou\'re Choice!"))
+            if add_item == 1:
+                hero.add_ability(abiliy)
+            elif add_item == 2:
+                hero.add_armor(armor)
+            elif add_item == 3:
+                hero.add_weapon(weapon)
+            return hero
+
+
 
 
 if __name__ == "__main__":
