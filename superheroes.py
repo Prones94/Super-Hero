@@ -41,8 +41,11 @@ class Hero:
         self.name = name
         self.health = starting_health
         self.current_health = self.health
-        self.abilities = list()
-        self.armors = list()
+        self.abilities = []
+        self.armors = []
+        self.deaths = 0
+        self.kills = 0
+
 
     def add_ability(self, ability):
         self.abilities.append(ability)
@@ -71,6 +74,13 @@ class Hero:
     def is_alive(self):
         return self.current_health > 0
 
+    def add_kill(self, num_kills):
+        self.kills += num_kills
+
+    def add_death(self, num_deaths):
+        self.deaths += num_deaths
+
+
     def fight(self, opponent):
         if not self.abilities:
             return 'Draw'
@@ -80,12 +90,16 @@ class Hero:
                 opponent.take_damage(hero_attack)
             else:
                 print(f'{opponent.name} won!')
+                opponent.add_kill(1)
+                self.add_death(1)
                 break
             if opponent.is_alive():
                 hero_attack = opponent.attack()
                 self.take_damage(hero_attack)
             else:
                 print(f'{self.name} won!')
+                self.add_kill(1)
+                opponent.add_death(1)
                 break
 
 # class of Team
@@ -99,6 +113,25 @@ class Team:
     def add_hero(self, hero):
         self.heroes.append(hero)
 
+    def attack(self, other_team):
+        living_heroes = []
+        living_opponents = []
+
+        for hero in self.heroes:
+            living_heroes.append(hero)
+
+        for hero in other_team.heroes:
+            living_opponents.append(hero)
+
+        while len(self.remainder_heroes()[0]) < len(self.heroes) and len(other_team.remainder_heroes()[0]) < len(self.heroes):
+            my_hero = choice(self.remainder_heroes()[1])
+            opponent_hero  = choice(other_team.remainder_heroes()[1])
+            my_hero.fight(opponent_hero)
+
+    def revive_heroes(self, health = 100):
+        for hero in self.heroes:
+            hero.current_health = health
+
     def remove_hero(self, name):
         foundHero = False
         for hero in self.heroes:
@@ -111,6 +144,21 @@ class Team:
     def view_all_heroes(self):
         for hero in self.heroes:
             print(hero.name)
+
+    def stats(self):
+        for hero in self.heroes:
+            kd_ratio = hero.kills / hero.deaths
+            print(f'Kill/Death Ratio for {hero.name}: {kd_ratio}')
+
+    def remainder_heroes(self):
+        dead_hero = []
+        alive_hero = []
+        for hero in self.heroes:
+            if hero.is_alive() == False:
+                dead_hero.append(hero)
+            else:
+                alive_hero.append(hero)
+        return dead_hero, alive_hero
 
 
 if __name__ == "__main__":
