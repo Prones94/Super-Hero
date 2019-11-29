@@ -3,36 +3,48 @@ from random import randint, choice
 
 # Ability Class
 
+
 class Ability:
-    def __init__(self,name,max_damage=0):
+    def __init__(self, name, max_damage=0):
         self.name = name
         self.damage = max_damage
-    
+
     def attack(self):
         '''Returns a value between 0 and value set by self.max_damage'''
-        attack_power = randint(0,self.damage)
+        attack_power = randint(0, self.damage)
         return attack_power
 
+# Weapoon Class inheriting from Ability class
+
+
+class Weapon(Ability):
+    def attack(self):
+        wpn_atk = self.damage // 2
+        return randint(wpn_atk, self.damage)
+
 # Armor Class
+
+
 class Armor:
-    def __init__(self,name,max_block=0):
+    def __init__(self, name, max_block=0):
         self.name = name
         self.defense = max_block
 
     def block(self):
         '''Returns random value between 0 and value set by self.defense'''
-        return randint(0,self.defense)
+        return randint(0, self.defense)
+
 
 # Hero Class
 class Hero:
-    def __init__(self,name,starting_health=100):
+    def __init__(self, name, starting_health=100):
         self.name = name
         self.health = starting_health
         self.current_health = self.health
         self.abilities = list()
         self.armors = list()
 
-    def add_ability(self,ability):
+    def add_ability(self, ability):
         self.abilities.append(ability)
 
     def attack(self):
@@ -41,7 +53,7 @@ class Hero:
             total_atk += ability.attack()
         return total_atk
 
-    def add_armor(self,armor):
+    def add_armor(self, armor):
         self.armors.append(armor)
 
     def defend(self):
@@ -50,13 +62,16 @@ class Hero:
             damage_amt += armor.block()
         return damage_amt
 
-    def take_damage(self,damage):
-        self.current_health -= damage - self.defend() 
+    def take_damage(self, damage):
+        self.current_health -= damage - self.defend()
+
+    def add_weapon(self, weapon):
+        self.abilities.append(weapon)
 
     def is_alive(self):
         return self.current_health > 0
 
-    def fight(self,opponent):
+    def fight(self, opponent):
         if not self.abilities:
             return 'Draw'
         while True:
@@ -73,19 +88,33 @@ class Hero:
                 print(f'{self.name} won!')
                 break
 
-        
+# class of Team
+
+
+class Team:
+    def __init__(self, name):
+        self.name = name
+        self.heroes = []
+
+    def add_hero(self, hero):
+        self.heroes.append(hero)
+
+    def remove_hero(self, name):
+        foundHero = False
+        for hero in self.heroes:
+            if hero.name == name:
+                self.heroes.remove(hero)
+                foundHero = True
+        if not foundHero:
+            return 0
+
+    def view_all_heroes(self):
+        for hero in self.heroes:
+            print(hero.name)
 
 
 if __name__ == "__main__":
-    hero1 = Hero("Wonder Woman")
-    hero2 = Hero("Dumbledore")
-    ability1 = Ability("Super Speed", 20)
-    ability2 = Ability("Super Eyes", 10)
-    ability3 = Ability("Wizard Wand", 800)
-    ability4 = Ability("Wizard Beard", 2000)
-    hero1.add_ability(ability1)
-    hero1.add_ability(ability2)
-    hero2.add_ability(ability3)
-    hero2.add_ability(ability4)
-    hero1.fight(hero2)
-    hero2.fight(hero1)
+    hero = Hero("Wonder Woman")
+    weapon = Weapon("Lasso of Truth", 90)
+    hero.add_weapon(weapon)
+    print(hero.attack())
