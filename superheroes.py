@@ -165,7 +165,7 @@ class Arena:
         self.team_two = Team('Other Team')
 
     def create_ability(self):
-        name = input('What is the ability name?')
+        name = input('Choose an ability and name it:')
         max_damage = int(input('What\'s the max damage of this ability?'))
         return Ability(name, max_damage)
 
@@ -175,8 +175,7 @@ class Arena:
         return Weapon(name, weapon_damage)
 
     def create_armor(self):
-        name = input(
-            "now choose your legendary armor. What will this be named?")
+        name = input("now choose your legendary armor. What will this be named?")
         max_block = int(input("how strong will this armor be?"))
         return Armor(name, max_block)
 
@@ -191,10 +190,13 @@ class Arena:
             add_item = input(
                 "[1] Add ability\n[2] Add weapon\n[3] Add armor\n[4] Done adding items\n\nYour choice: ")
             if add_item == "1":
+                ability = self.create_ability()
                 hero.add_ability(ability)
             elif add_item == "2":
+                armor = self.create_armor()
                 hero.add_armor(armor)
             elif add_item == "3":
+                weapon = self.create_weapon()
                 hero.add_weapon(weapon)
         return hero
     def build_team_one(self):
@@ -217,9 +219,29 @@ class Arena:
 
     def team_battle(self):
         self.team_one.attack(self.team_two)
+
+    def show_stats(self):
+        pass
+
         
 if __name__ == "__main__":
-    hero = Hero("Wonder Woman")
-    weapon = Weapon("Lasso of Truth", 90)
-    hero.add_weapon(weapon)
-    print(hero.attack())
+    game_is_running = True
+
+    # Instantiate Game Arena
+    arena = Arena()
+
+    # Build Teams
+    arena.team_battle()
+    arena.show_stats()
+    play_again = input('Would you like to play again? Press Y or N: ')
+
+    # Check User Input
+    if play_again.lower() == "n":
+        # Ends Game
+        game_is_running = False
+    else:
+        # Revive Heroes to Play Game Again
+        arena.team_one.revive_heroes()
+        arena.team_two.revive_heroes()
+
+
