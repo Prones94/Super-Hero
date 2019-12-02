@@ -46,7 +46,6 @@ class Hero:
         self.deaths = 0
         self.kills = 0
 
-
     def add_ability(self, ability):
         self.abilities.append(ability)
 
@@ -80,7 +79,6 @@ class Hero:
     def add_death(self, num_deaths):
         self.deaths += num_deaths
 
-
     def fight(self, opponent):
         if not self.abilities:
             return 'Draw'
@@ -103,6 +101,8 @@ class Hero:
                 break
 
 # class of Team
+
+
 class Team:
     def __init__(self, name):
         self.name = name
@@ -123,10 +123,10 @@ class Team:
 
         while len(self.remainder_heroes()[0]) < len(self.heroes) and len(other_team.remainder_heroes()[0]) < len(self.heroes):
             my_hero = choice(self.remainder_heroes()[1])
-            opponent_hero  = choice(other_team.remainder_heroes()[1])
+            opponent_hero = choice(other_team.remainder_heroes()[1])
             my_hero.fight(opponent_hero)
 
-    def revive_heroes(self, health = 100):
+    def revive_heroes(self, health=100):
         for hero in self.heroes:
             hero.current_health = health
 
@@ -158,6 +158,7 @@ class Team:
                 alive_hero.append(hero)
         return dead_hero, alive_hero
 
+
 class Arena:
     def __init__(self):
         self.team_one = Team('My Team')
@@ -174,27 +175,49 @@ class Arena:
         return Weapon(name, weapon_damage)
 
     def create_armor(self):
-        name = input("now choose your legendary armor. What will this be named?")
+        name = input(
+            "now choose your legendary armor. What will this be named?")
         max_block = int(input("how strong will this armor be?"))
         return Armor(name, max_block)
 
     def create_hero(self):
-        name = input("What will your hero be named: ")
-        hero = Hero(name)
+        '''Prompt user for Hero information
+          return Hero with values from user input.
+        '''
+        hero_name = input("Hero's name: ")
+        hero = Hero(hero_name)
         add_item = None
-        while add_item != 4:
-            add_item = int(input("Press [1] to add ability\nPress [2] to add armor\nPress [3] to add weapon\nPress [4] when finished\n\nYou\'re Choice!"))
-            if add_item == 1:
-                hero.add_ability(abiliy)
-            elif add_item == 2:
+        while add_item != "4":
+            add_item = input(
+                "[1] Add ability\n[2] Add weapon\n[3] Add armor\n[4] Done adding items\n\nYour choice: ")
+            if add_item == "1":
+                hero.add_ability(ability)
+            elif add_item == "2":
                 hero.add_armor(armor)
-            elif add_item == 3:
+            elif add_item == "3":
                 hero.add_weapon(weapon)
-            return hero
+        return hero
+    def build_team_one(self):
+        '''Prompt the user to build team_one '''
+        team_name = input("Name first team: ") 
+        number_of_heroes = int(input("How many people would you like on this team?"))
+        self.team_one = Team(team_name)
+        for _ in range(number_of_heroes):
+            hero = self.create_hero()
+            self.team_one.add_hero(hero)
 
+    def build_team_two(self):
+        '''Prompt the user to build team_two'''
+        team_name = input('Name second team: ')
+        number_of_heroes = int(input('How many heroes on this team? '))
+        self.team_two = Team(team_name)
+        for _ in range(number_of_heroes):
+            hero  = self.create_hero()
+            self.team_two.add_hero(hero)
 
-
-
+    def team_battle(self):
+        self.team_one.attack(self.team_two)
+        
 if __name__ == "__main__":
     hero = Hero("Wonder Woman")
     weapon = Weapon("Lasso of Truth", 90)
