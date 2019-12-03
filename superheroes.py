@@ -146,7 +146,7 @@ class Team:
     def stats(self):
         for hero in self.heroes:
             kd_ratio = hero.kills / hero.deaths
-            print(f'Kill/Death Ratio for {hero.name}: {kd_ratio}')
+            return f'Kill/Death Ratio for {hero.name}: {kd_ratio}'
 
     def remainder_heroes(self):
         dead_hero = []
@@ -156,6 +156,7 @@ class Team:
                 dead_hero.append(hero)
             else:
                 alive_hero.append(hero)
+                
         return dead_hero, alive_hero
 
 
@@ -221,7 +222,17 @@ class Arena:
         self.team_one.attack(self.team_two)
 
     def show_stats(self):
-        pass
+        team_one_stats = self.team_one.stats()
+        team_two_stats = self.team_two.stats()
+        if team_one_stats > team_two_stats:
+            print(f'{self.team_one.name} wins this round!\nHeroes still alive:')
+            for hero in self.team_one.heroes:
+                print(f'--> {hero.name}')
+        elif team_one_stats < team_two_stats:
+            print(f'{self.team_two.name} wins this round!\nHeroes still alive:')
+            for hero in self.team_two.heroes:
+                print(f'--> {hero.name}')
+
 
         
 if __name__ == "__main__":
